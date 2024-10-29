@@ -1,0 +1,35 @@
+* SPICE3 file created from inverter_1.ext - technology: scmos
+.include tsmc_cmos025
+.option scale=0.12u
+
+.model nfet NMOS
+.model pfet PMOS
+
+Vdd vdd 0 2.5V
+Vin A gnd PULSE(0 2.5 0ns 10ns 10ns 20ns 40ns)
+CL Z 0 1fF
+.TRAN 1ns 100ns
+
+M1000 Z A vdd vdd pfet w=7 l=2
++  ad=35 pd=24 as=35 ps=24
+M1001 Z A gnd Gnd nfet w=4 l=2
++  ad=20 pd=18 as=20 ps=18
+C0 A vdd 0.10fF
+C1 vdd Z 0.16fF
+C2 A Z 0.06fF
+C3 gnd Z 0.07fF
+C4 gnd Gnd 0.09fF
+C5 Z Gnd 0.33fF
+C6 A Gnd 0.76fF
+C7 vdd Gnd 0.51fF
+
+* Delay measurement
+.measure tran tp_inverter TRIG V(A) VAL=1.25 FALL=1 TARG V(Z) VAL=1.25 RISE=1
+
+* Simulation control commands
+.control
+run
+print tp_inverter
+.endc
+
+.end
